@@ -4,6 +4,7 @@ import axios from 'axios';
 const axiosJsonAdapter = require('axios-jsonp');
 
 const App: VFC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [map, setMap] = useState<google.maps.Map>();
   const [center, setCenter] = useState<
     google.maps.LatLng | google.maps.LatLngLiteral
@@ -24,7 +25,9 @@ const App: VFC = () => {
 
   const onSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     setMarkerLocations([]);
+
     const geocoder = new google.maps.Geocoder();
     const bounds = new google.maps.LatLngBounds();
     const res = await axios.get(
@@ -59,9 +62,15 @@ const App: VFC = () => {
     } else {
       alert('条件を絞り込んでください');
     }
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
   };
 
   useEffect(() => {
+    setIsLoading(true);
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -76,22 +85,33 @@ const App: VFC = () => {
         }
       );
     }
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
   }, []);
 
   return (
     <div className="max-w-4xl mx-auto">
-      <LoadScript googleMapsApiKey="AIzaSyB5KlhSNJ37deePhGn1Can7L1uK0MaFT_M">
-        <GoogleMap
-          mapContainerStyle={{ width: '100%', height: '400px' }}
-          center={center}
-          zoom={zoom}
-          onLoad={onLoadMap}
-        >
-          {markerLocations.map((markerLocation, index) => (
-            <Marker key={index} position={markerLocation} />
-          ))}
-        </GoogleMap>
-      </LoadScript>
+      <div className="relative">
+        <LoadScript googleMapsApiKey="AIzaSyB5KlhSNJ37deePhGn1Can7L1uK0MaFT_M">
+          <GoogleMap
+            mapContainerStyle={{ width: '100%', height: '400px' }}
+            center={center}
+            zoom={zoom}
+            onLoad={onLoadMap}
+          >
+            {markerLocations.map((markerLocation, index) => (
+              <Marker key={index} position={markerLocation} />
+            ))}
+          </GoogleMap>
+        </LoadScript>
+        {isLoading && (
+          <div className="absolute flex justify-center items-center bg-gray-300 w-full h-full top-0 right-0 bottom-0 left-0">
+            <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+          </div>
+        )}
+      </div>
 
       <div className="mt-8">
         <form onSubmit={onSubmitForm}>
