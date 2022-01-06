@@ -1,13 +1,22 @@
-import { ChangeEvent, FormEvent, useState, VFC } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState, VFC } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import axios from 'axios';
 const axiosJsonAdapter = require('axios-jsonp');
 
 const App: VFC = () => {
-  const [keyword, setKeyword] = useState<string>('');
+  const [map, setMap] = useState<google.maps.Map>();
+  const [center, setCenter] = useState<
+    google.maps.LatLng | google.maps.LatLngLiteral
+  >();
+  const [zoom, setZoom] = useState<number>(16);
   const [markerLocations, setMarkerLocations] = useState<google.maps.LatLng[]>(
     []
   );
+  const [keyword, setKeyword] = useState<string>('');
+
+  const onLoadMap = (map: google.maps.Map) => {
+    setMap(map);
+  };
 
   const onChangeKeyword = (event: ChangeEvent<HTMLInputElement>) => {
     setKeyword(event.target.value);
@@ -17,6 +26,7 @@ const App: VFC = () => {
     event.preventDefault();
     setMarkerLocations([]);
     const geocoder = new google.maps.Geocoder();
+    const bounds = new google.maps.LatLngBounds();
     const res = await axios.get(
       'https://webservice.recruit.co.jp/hotpepper/shop/v1/',
       {
@@ -33,10 +43,10 @@ const App: VFC = () => {
       res.data.results.shop.forEach((shopData: any) => {
         geocoder.geocode({ address: shopData.address }, (results, status) => {
           if (status === google.maps.GeocoderStatus.OK) {
-            const bounds = new google.maps.LatLngBounds();
             if (results![0].geometry) {
               const latlng = results![0].geometry.location;
               bounds.extend(latlng);
+              map?.fitBounds(bounds);
               setMarkerLocations((prevState) => [...prevState, latlng]);
             }
           } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
@@ -51,13 +61,31 @@ const App: VFC = () => {
     }
   };
 
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCenter({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          setCenter({ lat: 38, lng: 137.5936 });
+          setZoom(5);
+        }
+      );
+    }
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto">
       <LoadScript googleMapsApiKey="AIzaSyB5KlhSNJ37deePhGn1Can7L1uK0MaFT_M">
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '400px' }}
-          center={{ lat: 38, lng: 137.5936 }}
-          zoom={5}
+          center={center}
+          zoom={zoom}
+          onLoad={onLoadMap}
         >
           {markerLocations.map((markerLocation, index) => (
             <Marker key={index} position={markerLocation} />
