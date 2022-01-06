@@ -43,7 +43,7 @@ const App: VFC = () => {
 
     const bounds = new google.maps.LatLngBounds();
     const res = await axios.get(
-      'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/',
+      'https://webservice.recruit.co.jp/hotpepper/gourmet/v1/',
       {
         adapter: axiosJsonAdapter,
         params: {
