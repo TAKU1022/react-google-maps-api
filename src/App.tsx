@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState, VFC } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import largeAreaData from './data/largeArea.json';
 import axios from 'axios';
 const axiosJsonAdapter = require('axios-jsonp');
 
@@ -13,10 +14,16 @@ const App: VFC = () => {
   const [markerLocations, setMarkerLocations] = useState<google.maps.LatLng[]>(
     []
   );
+  const [largeArea, setLargeArea] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
+  const [hitCount, setHitCount] = useState<number>();
 
   const onLoadMap = (map: google.maps.Map) => {
     setMap(map);
+  };
+
+  const onChangeLargeArea = (event: ChangeEvent<HTMLSelectElement>) => {
+    setLargeArea(event.target.value);
   };
 
   const onChangeKeyword = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,39 +35,34 @@ const App: VFC = () => {
     setIsLoading(true);
     setMarkerLocations([]);
 
-    const geocoder = new google.maps.Geocoder();
     const bounds = new google.maps.LatLngBounds();
     const res = await axios.get(
-      'https://webservice.recruit.co.jp/hotpepper/shop/v1/',
+      'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/',
       {
         adapter: axiosJsonAdapter,
         params: {
           key: process.env.REACT_APP_HOTPEPPER_API_KEY,
-          keyword: encodeURIComponent(keyword),
+          service_area: largeArea,
+          keyword,
+          count: 100,
           format: 'jsonp',
         },
       }
     );
 
     if (res.data.results.shop) {
+      setHitCount(res.data.results.shop.length);
       res.data.results.shop.forEach((shopData: any) => {
-        geocoder.geocode({ address: shopData.address }, (results, status) => {
-          if (status === google.maps.GeocoderStatus.OK) {
-            if (results![0].geometry) {
-              const latlng = results![0].geometry.location;
-              bounds.extend(latlng);
-              map?.fitBounds(bounds);
-              setMarkerLocations((prevState) => [...prevState, latlng]);
-            }
-          } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
-            alert('見つかりません');
-          } else {
-            alert('文字を入力してください');
-          }
-        });
+        const latlng = {
+          lat: shopData.lat,
+          lng: shopData.lng,
+        } as google.maps.LatLng;
+        bounds.extend(latlng);
+        map?.fitBounds(bounds);
+        setMarkerLocations((prevState) => [...prevState, latlng]);
       });
     } else {
-      alert('条件を絞り込んでください');
+      alert('エラー発生');
     }
 
     setTimeout(() => {
@@ -70,6 +72,7 @@ const App: VFC = () => {
 
   useEffect(() => {
     setIsLoading(true);
+    setLargeArea(largeAreaData.results.large_area[0].service_area.code);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -115,16 +118,28 @@ const App: VFC = () => {
 
       <div className="mt-8">
         <form onSubmit={onSubmitForm}>
-          <input
-            type="text"
-            name="place"
+          <select
             className="border-2 rounded p-2 mr-4"
+            onChange={onChangeLargeArea}
+          >
+            {largeAreaData.results.large_area.map((area) => (
+              <option key={area.code} value={area.service_area.code}>
+                {area.service_area.name}
+              </option>
+            ))}
+          </select>
+          <input
+            className="border-2 rounded p-2 mr-4"
+            type="text"
+            placeholder="キーワード"
             onChange={onChangeKeyword}
           />
-          <button type="submit" className="bg-gray-300 rounded px-3 py-1">
+          <button className="bg-gray-300 rounded px-3 py-1" type="submit">
             検索する
           </button>
         </form>
+        {hitCount && <p className="mt-4">{hitCount}件ヒットしました。</p>}
+        <p className="mt-6">※検索上限は最大100件です。</p>
       </div>
     </div>
   );
