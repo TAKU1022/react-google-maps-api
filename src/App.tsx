@@ -18,7 +18,7 @@ const App: VFC = () => {
     setMarkerLocations([]);
     const geocoder = new google.maps.Geocoder();
     const res = await axios.get(
-      'http://webservice.recruit.co.jp/hotpepper/shop/v1/',
+      'https://webservice.recruit.co.jp/hotpepper/shop/v1/',
       {
         adapter: axiosJsonAdapter,
         params: {
