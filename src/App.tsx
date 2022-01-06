@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState, VFC } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import largeAreaData from './data/largeArea.json';
+import middleAreaData from './data/middleArea.json';
 import axios from 'axios';
 const axiosJsonAdapter = require('axios-jsonp');
 
@@ -15,6 +16,7 @@ const App: VFC = () => {
     []
   );
   const [largeArea, setLargeArea] = useState<string>('');
+  const [middleArea, setMiddleArea] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
   const [hitCount, setHitCount] = useState<number>();
 
@@ -24,6 +26,10 @@ const App: VFC = () => {
 
   const onChangeLargeArea = (event: ChangeEvent<HTMLSelectElement>) => {
     setLargeArea(event.target.value);
+  };
+
+  const onChangeMiddleArea = (event: ChangeEvent<HTMLSelectElement>) => {
+    setMiddleArea(event.target.value);
   };
 
   const onChangeKeyword = (event: ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +48,8 @@ const App: VFC = () => {
         adapter: axiosJsonAdapter,
         params: {
           key: process.env.REACT_APP_HOTPEPPER_API_KEY,
-          service_area: largeArea,
+          large_area: largeArea,
+          middle_area: middleArea,
           keyword,
           count: 100,
           format: 'jsonp',
@@ -72,7 +79,8 @@ const App: VFC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    setLargeArea(largeAreaData.results.large_area[0].service_area.code);
+    setLargeArea(largeAreaData.results.large_area[0].code);
+    setMiddleArea(middleAreaData.results.middle_area[0].code);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -123,10 +131,22 @@ const App: VFC = () => {
             onChange={onChangeLargeArea}
           >
             {largeAreaData.results.large_area.map((area) => (
-              <option key={area.code} value={area.service_area.code}>
-                {area.service_area.name}
+              <option key={area.code} value={area.code}>
+                {area.name}
               </option>
             ))}
+          </select>
+          <select
+            className="border-2 rounded p-2 mr-4"
+            onChange={onChangeMiddleArea}
+          >
+            {middleAreaData.results.middle_area
+              .filter((areaData) => largeArea === areaData.large_area.code)
+              .map((area) => (
+                <option key={area.code} value={area.code}>
+                  {area.name}
+                </option>
+              ))}
           </select>
           <input
             className="border-2 rounded p-2 mr-4"
