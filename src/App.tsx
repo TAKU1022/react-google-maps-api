@@ -1,10 +1,13 @@
-import { ChangeEvent, FormEvent, useEffect, useState, VFC } from 'react';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { ChangeEvent, FormEvent, useState, VFC } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import axios from 'axios';
+const axiosJsonAdapter = require('axios-jsonp');
 
 const App: VFC = () => {
-  const [results, setResults] = useState<any>(null);
   const [keyword, setKeyword] = useState<string>('');
+  const [markerLocations, setMarkerLocations] = useState<google.maps.LatLng[]>(
+    []
+  );
 
   const onChangeKeyword = (event: ChangeEvent<HTMLInputElement>) => {
     setKeyword(event.target.value);
@@ -12,22 +15,41 @@ const App: VFC = () => {
 
   const onSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(results);
-  };
+    setMarkerLocations([]);
+    const geocoder = new google.maps.Geocoder();
+    const res = await axios.get(
+      'http://webservice.recruit.co.jp/hotpepper/shop/v1/',
+      {
+        adapter: axiosJsonAdapter,
+        params: {
+          key: process.env.REACT_APP_HOTPEPPER_API_KEY,
+          keyword: encodeURIComponent(keyword),
+          format: 'jsonp',
+        },
+      }
+    );
 
-  useEffect(() => {
-    axios
-      .get(
-        `https://peaceful-bayou-19080.herokuapp.com/api/v1/place?value=${encodeURIComponent(
-          keyword
-        )}`
-      )
-      .then((res) => {
-        setResults((prevState: any) => {
-          return { ...prevState, ...res.data.results };
+    if (res.data.results.shop) {
+      res.data.results.shop.forEach((shopData: any) => {
+        geocoder.geocode({ address: shopData.address }, (results, status) => {
+          if (status === google.maps.GeocoderStatus.OK) {
+            const bounds = new google.maps.LatLngBounds();
+            if (results![0].geometry) {
+              const latlng = results![0].geometry.location;
+              bounds.extend(latlng);
+              setMarkerLocations((prevState) => [...prevState, latlng]);
+            }
+          } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
+            alert('見つかりません');
+          } else {
+            alert('文字を入力してください');
+          }
         });
       });
-  }, [keyword]);
+    } else {
+      alert('条件を絞り込んでください');
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -36,7 +58,11 @@ const App: VFC = () => {
           mapContainerStyle={{ width: '100%', height: '400px' }}
           center={{ lat: 38, lng: 137.5936 }}
           zoom={5}
-        ></GoogleMap>
+        >
+          {markerLocations.map((markerLocation, index) => (
+            <Marker key={index} position={markerLocation} />
+          ))}
+        </GoogleMap>
       </LoadScript>
 
       <div className="mt-8">
