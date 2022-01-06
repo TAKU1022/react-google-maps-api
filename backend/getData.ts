@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const getLargeArea = async () => {
   const res = await axios.get(
-    `http://webservice.recruit.co.jp/hotpepper/large_area/v1/`,
+    `https://webservice.recruit.co.jp/hotpepper/large_area/v1/`,
     {
       params: {
         key: process.env.REACT_APP_HOTPEPPER_API_KEY,
@@ -18,7 +18,7 @@ const getLargeArea = async () => {
 
 const getMiddleArea = async () => {
   const res = await axios.get(
-    `http://webservice.recruit.co.jp/hotpepper/middle_area/v1/`,
+    `https://webservice.recruit.co.jp/hotpepper/middle_area/v1/`,
     {
       params: {
         key: process.env.REACT_APP_HOTPEPPER_API_KEY,
