@@ -15,7 +15,7 @@ const getData = async () => {
 
   console.log(process.env.REACT_APP_HOTPEPPER_API_KEY);
 
-  fs.writeFileSync('./data/area.json', JSON.stringify(res.data));
-  console.log('finish load area data');
+  fs.writeFileSync('./data/largeArea.json', JSON.stringify(res.data));
+  console.log('finish load largeArea data');
 };
 getData();
