@@ -12,7 +12,7 @@ import genreData from './data/genre.json';
 import axios from 'axios';
 import { MapView } from './components/MapView';
 import { LocationForm } from './components/LoactionForm';
-import { Gourmet } from './type/HotPepper';
+import { Gourmet, Shop } from './type/HotPepper';
 const axiosJsonAdapter = require('axios-jsonp');
 
 export const App: VFC = () => {
@@ -23,9 +23,8 @@ export const App: VFC = () => {
     google.maps.LatLng | google.maps.LatLngLiteral
   >({ lat: 35.6809591, lng: 139.7673068 });
   const [zoom, setZoom] = useState<number>(16);
-  const [markerLocations, setMarkerLocations] = useState<
-    google.maps.LatLng[] | google.maps.LatLngLiteral[]
-  >([]);
+  const [shopList, setShopList] = useState<Shop[]>([]);
+  const [infoWindowOptions, setInfoWindowOptions] = useState<Shop[]>([]);
 
   const [largeArea, setLargeArea] = useState<string>('');
   const [middleArea, setMiddleArea] = useState<string>('');
@@ -36,6 +35,11 @@ export const App: VFC = () => {
   const onLoadMap = useCallback((map: google.maps.Map) => {
     setMap(map);
   }, []);
+
+  const onClickMarker = (shopData: Shop) => {
+    console.log(shopData.id);
+    setInfoWindowOptions((prevState) => [...prevState, shopData]);
+  };
 
   const onChangeLargeArea = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
@@ -66,7 +70,6 @@ export const App: VFC = () => {
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       setIsLoading(true);
-      setMarkerLocations([]);
 
       const bounds = new google.maps.LatLngBounds();
       const res = await axios.get<Gourmet>(
@@ -88,14 +91,10 @@ export const App: VFC = () => {
 
       if (gourmetData.results.shop) {
         setHitCount(parseInt(gourmetData.results.results_returned));
-        gourmetData.results.shop.forEach((shopData: any) => {
-          const latlng = {
-            lat: shopData.lat,
-            lng: shopData.lng,
-          };
-          bounds.extend(latlng);
+        gourmetData.results.shop.forEach((shopData) => {
+          bounds.extend({ lat: shopData.lat, lng: shopData.lng });
           map?.fitBounds(bounds);
-          setMarkerLocations((prevState) => [...prevState, latlng]);
+          setShopList((prevState) => [...prevState, shopData]);
         });
       } else {
         alert('エラー発生');
@@ -140,8 +139,10 @@ export const App: VFC = () => {
         isLoading={isLoading}
         center={center}
         zoom={zoom}
-        markerLocations={markerLocations}
+        shopList={shopList}
+        infoWindowOptions={infoWindowOptions}
         onLoadMap={onLoadMap}
+        onClickMarker={onClickMarker}
       />
       <div className="mt-8">
         <LocationForm
