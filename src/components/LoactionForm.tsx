@@ -69,7 +69,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           onChange={onChangeKeyword}
         />
         <button
-          className={`bg-blue-500 text-slate-50 rounded block px-3 py-1 mx-auto mt-4 disabled:bg-gray-400`}
+          className="bg-blue-500 text-slate-50 rounded block px-3 py-1 mx-auto mt-4 disabled:bg-gray-400"
           type="submit"
           disabled={isLoading}
         >
