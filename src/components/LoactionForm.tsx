@@ -32,7 +32,8 @@ export const LocationForm: VFC<Props> = memo((props) => {
 
   return (
     <>
-      <form onSubmit={onSubmitForm}>
+      <p className="mt-6">※検索上限は最大100件です。</p>
+      <form className="mt-2" onSubmit={onSubmitForm}>
         <select
           className="border-2 rounded p-2 mr-4"
           onChange={onChangeLargeArea}
@@ -69,7 +70,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           onChange={onChangeKeyword}
         />
         <button
-          className="bg-blue-500 text-slate-50 rounded block px-3 py-1 mx-auto mt-4 disabled:bg-gray-400"
+          className="bg-blue-500 text-gray-50 rounded block px-3 py-1 mx-auto mt-4 disabled:bg-gray-400"
           type="submit"
           disabled={isLoading}
         >
@@ -77,9 +78,8 @@ export const LocationForm: VFC<Props> = memo((props) => {
         </button>
       </form>
       {hitCount === undefined || (
-        <p className="mt-4">{hitCount}件ヒットしました。</p>
+        <p className="text-center mt-4">{hitCount}件ヒットしました。</p>
       )}
-      <p className="mt-6">※検索上限は最大100件です。</p>
     </>
   );
 });
