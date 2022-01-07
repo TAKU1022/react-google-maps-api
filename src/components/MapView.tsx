@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { memo, VFC } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   onLoadMap: (map: google.maps.Map) => void;
 };
 
-export const MapView: VFC<Props> = (props) => {
+export const MapView: VFC<Props> = memo((props) => {
   const { isLoading, center, zoom, markerLocations, onLoadMap } = props;
 
   return (
@@ -33,4 +33,4 @@ export const MapView: VFC<Props> = (props) => {
       )}
     </div>
   );
-};
+});

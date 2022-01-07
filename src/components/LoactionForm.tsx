@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, VFC } from 'react';
+import { ChangeEvent, FormEvent, memo, VFC } from 'react';
 import { LargeArea, MiddleArea } from '../type/HotPepper';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
   onSubmitForm: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 };
 
-export const LocationForm: VFC<Props> = (props) => {
+export const LocationForm: VFC<Props> = memo((props) => {
   const {
     largeAreaData,
     middleAreaData,
@@ -59,8 +59,10 @@ export const LocationForm: VFC<Props> = (props) => {
           検索する
         </button>
       </form>
-      {hitCount && <p className="mt-4">{hitCount}件ヒットしました。</p>}
+      {hitCount === undefined || (
+        <p className="mt-4">{hitCount}件ヒットしました。</p>
+      )}
       <p className="mt-6">※検索上限は最大100件です。</p>
     </>
   );
-};
+});

@@ -34,58 +34,70 @@ export const App: VFC = () => {
     setMap(map);
   }, []);
 
-  const onChangeLargeArea = (event: ChangeEvent<HTMLSelectElement>) => {
-    setLargeArea(event.target.value);
-  };
+  const onChangeLargeArea = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      setLargeArea(event.target.value);
+    },
+    []
+  );
 
-  const onChangeMiddleArea = (event: ChangeEvent<HTMLSelectElement>) => {
-    setMiddleArea(event.target.value);
-  };
+  const onChangeMiddleArea = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      setMiddleArea(event.target.value);
+    },
+    []
+  );
 
-  const onChangeKeyword = (event: ChangeEvent<HTMLInputElement>) => {
-    setKeyword(event.target.value);
-  };
+  const onChangeKeyword = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setKeyword(event.target.value);
+    },
+    []
+  );
 
-  const onSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-    setMarkerLocations([]);
+  const onSubmitForm = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setIsLoading(true);
+      setMarkerLocations([]);
 
-    const bounds = new google.maps.LatLngBounds();
-    const res = await axios.get(
-      'https://webservice.recruit.co.jp/hotpepper/gourmet/v1/',
-      {
-        adapter: axiosJsonAdapter,
-        params: {
-          key: process.env.REACT_APP_HOTPEPPER_API_KEY,
-          large_area: largeArea,
-          middle_area: middleArea,
-          keyword,
-          count: 100,
-          format: 'jsonp',
-        },
+      const bounds = new google.maps.LatLngBounds();
+      const res = await axios.get(
+        'https://webservice.recruit.co.jp/hotpepper/gourmet/v1/',
+        {
+          adapter: axiosJsonAdapter,
+          params: {
+            key: process.env.REACT_APP_HOTPEPPER_API_KEY,
+            large_area: largeArea,
+            middle_area: middleArea,
+            keyword,
+            count: 100,
+            format: 'jsonp',
+          },
+        }
+      );
+
+      if (res.data.results.shop) {
+        setHitCount(res.data.results.shop.length);
+        res.data.results.shop.forEach((shopData: any) => {
+          const latlng = {
+            lat: shopData.lat,
+            lng: shopData.lng,
+          };
+          bounds.extend(latlng);
+          map?.fitBounds(bounds);
+          setMarkerLocations((prevState) => [...prevState, latlng]);
+        });
+      } else {
+        alert('エラー発生');
       }
-    );
 
-    if (res.data.results.shop) {
-      setHitCount(res.data.results.shop.length);
-      res.data.results.shop.forEach((shopData: any) => {
-        const latlng = {
-          lat: shopData.lat,
-          lng: shopData.lng,
-        };
-        bounds.extend(latlng);
-        map?.fitBounds(bounds);
-        setMarkerLocations((prevState) => [...prevState, latlng]);
-      });
-    } else {
-      alert('エラー発生');
-    }
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-  };
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1500);
+    },
+    [keyword, largeArea, map, middleArea]
+  );
 
   useEffect(() => {
     setIsLoading(true);
