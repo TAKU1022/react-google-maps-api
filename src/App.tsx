@@ -144,7 +144,7 @@ export const App: VFC = () => {
         setIsLoading(false);
       }, 1500);
     },
-    [keyword, largeArea, map, middleArea, genre, wifi]
+    [keyword, largeArea, map, middleArea, genre, wifi, freeDrink, freeFood]
   );
 
   useEffect(() => {
