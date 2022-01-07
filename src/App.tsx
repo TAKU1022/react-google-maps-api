@@ -37,9 +37,18 @@ export const App: VFC = () => {
   }, []);
 
   const onClickMarker = (shopData: Shop) => {
-    console.log(shopData.id);
     setInfoWindowOptions((prevState) => [...prevState, shopData]);
   };
+
+  const onCloseInfoWindow = (shopData: Shop) => {
+    setInfoWindowOptions(
+      infoWindowOptions.filter((prevShopData) => !(prevShopData === shopData))
+    );
+  };
+
+  useEffect(() => {
+    console.log(infoWindowOptions);
+  }, [infoWindowOptions]);
 
   const onChangeLargeArea = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
@@ -70,6 +79,7 @@ export const App: VFC = () => {
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       setIsLoading(true);
+      setShopList([]);
 
       const bounds = new google.maps.LatLngBounds();
       const res = await axios.get<Gourmet>(
@@ -143,6 +153,7 @@ export const App: VFC = () => {
         infoWindowOptions={infoWindowOptions}
         onLoadMap={onLoadMap}
         onClickMarker={onClickMarker}
+        onCloseInfoWindow={onCloseInfoWindow}
       />
       <div className="mt-8">
         <LocationForm

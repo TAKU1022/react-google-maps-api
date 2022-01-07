@@ -15,6 +15,7 @@ type Props = {
   infoWindowOptions: Shop[];
   onLoadMap: (map: google.maps.Map) => void;
   onClickMarker: (shopData: Shop) => void;
+  onCloseInfoWindow: (shopData: Shop) => void;
 };
 
 export const MapView: VFC<Props> = memo((props) => {
@@ -26,6 +27,7 @@ export const MapView: VFC<Props> = memo((props) => {
     infoWindowOptions,
     onLoadMap,
     onClickMarker,
+    onCloseInfoWindow,
   } = props;
 
   return (
@@ -50,6 +52,7 @@ export const MapView: VFC<Props> = memo((props) => {
               <InfoWindow
                 key={shopData.id}
                 position={{ lat: shopData.lat, lng: shopData.lng }}
+                onCloseClick={() => onCloseInfoWindow(shopData)}
               >
                 <p>{shopData.address}</p>
               </InfoWindow>
