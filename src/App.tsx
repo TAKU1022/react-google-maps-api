@@ -23,7 +23,6 @@ export const App: VFC = () => {
   const [center, setCenter] = useState<
     google.maps.LatLng | google.maps.LatLngLiteral
   >({ lat: 35.6809591, lng: 139.7673068 });
-  const [zoom, setZoom] = useState<number>(17);
   const [shopList, setShopList] = useState<Shop[]>([]);
   const [infoWindowOption, setInfoWindowOption] = useState<Shop>();
 
@@ -37,15 +36,18 @@ export const App: VFC = () => {
     setSize(new google.maps.Size(0, -45));
   }, []);
 
-  const onLoadMap = useCallback((map: google.maps.Map) => {
-    setMap(map);
+  const onLoadMap = useCallback((mapData: google.maps.Map) => {
+    setMap(mapData);
   }, []);
 
-  const onClickMarker = useCallback((shopData: Shop) => {
-    setCenter({ lat: shopData.lat, lng: shopData.lng });
-    setZoom(16);
-    setInfoWindowOption(shopData);
-  }, []);
+  const onClickMarker = useCallback(
+    (shopData: Shop) => {
+      setInfoWindowOption(shopData);
+      map?.setCenter({ lat: shopData.lat, lng: shopData.lng });
+      map?.setZoom(18);
+    },
+    [map]
+  );
 
   const onCloseInfoWindow = useCallback(() => {
     setInfoWindowOption(undefined);
@@ -151,7 +153,6 @@ export const App: VFC = () => {
         isLoading={isLoading}
         size={size}
         center={center}
-        zoom={zoom}
         shopList={shopList}
         infoWindowOption={infoWindowOption}
         onGoogleMapsScript={onLoadGoogleMapsScript}
