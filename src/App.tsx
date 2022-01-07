@@ -18,6 +18,7 @@ const axiosJsonAdapter = require('axios-jsonp');
 export const App: VFC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [mapSize, setMapSize] = useState<google.maps.Size>();
   const [map, setMap] = useState<google.maps.Map>();
   const [center, setCenter] = useState<
     google.maps.LatLng | google.maps.LatLngLiteral
@@ -32,19 +33,26 @@ export const App: VFC = () => {
   const [keyword, setKeyword] = useState<string>('');
   const [hitCount, setHitCount] = useState<number>();
 
+  const onLoadGoogleMapsScript = useCallback(() => {
+    setMapSize(new google.maps.Size(0, -45));
+  }, []);
+
   const onLoadMap = useCallback((map: google.maps.Map) => {
     setMap(map);
   }, []);
 
-  const onClickMarker = (shopData: Shop) => {
+  const onClickMarker = useCallback((shopData: Shop) => {
     setInfoWindowOptions((prevState) => [...prevState, shopData]);
-  };
+  }, []);
 
-  const onCloseInfoWindow = (shopData: Shop) => {
-    setInfoWindowOptions(
-      infoWindowOptions.filter((prevShopData) => !(prevShopData === shopData))
-    );
-  };
+  const onCloseInfoWindow = useCallback(
+    (shopData: Shop) => {
+      setInfoWindowOptions(
+        infoWindowOptions.filter((prevShopData) => !(prevShopData === shopData))
+      );
+    },
+    [infoWindowOptions]
+  );
 
   const onChangeLargeArea = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
@@ -143,10 +151,12 @@ export const App: VFC = () => {
     <div className="max-w-4xl mx-auto">
       <MapView
         isLoading={isLoading}
+        mapSize={mapSize}
         center={center}
         zoom={zoom}
         shopList={shopList}
         infoWindowOptions={infoWindowOptions}
+        onGoogleMapsScript={onLoadGoogleMapsScript}
         onLoadMap={onLoadMap}
         onClickMarker={onClickMarker}
         onCloseInfoWindow={onCloseInfoWindow}

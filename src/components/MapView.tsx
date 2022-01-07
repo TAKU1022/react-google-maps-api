@@ -9,10 +9,12 @@ import { Shop } from '../type/HotPepper';
 
 type Props = {
   isLoading: boolean;
+  mapSize?: google.maps.Size;
   center: google.maps.LatLng | google.maps.LatLngLiteral;
   zoom: number;
   shopList: Shop[];
   infoWindowOptions: Shop[];
+  onGoogleMapsScript: () => void;
   onLoadMap: (map: google.maps.Map) => void;
   onClickMarker: (shopData: Shop) => void;
   onCloseInfoWindow: (shopData: Shop) => void;
@@ -21,10 +23,12 @@ type Props = {
 export const MapView: VFC<Props> = memo((props) => {
   const {
     isLoading,
+    mapSize,
     center,
     zoom,
     shopList,
     infoWindowOptions,
+    onGoogleMapsScript,
     onLoadMap,
     onClickMarker,
     onCloseInfoWindow,
@@ -32,7 +36,10 @@ export const MapView: VFC<Props> = memo((props) => {
 
   return (
     <div className="relative">
-      <LoadScript googleMapsApiKey="AIzaSyB5KlhSNJ37deePhGn1Can7L1uK0MaFT_M">
+      <LoadScript
+        googleMapsApiKey="AIzaSyB5KlhSNJ37deePhGn1Can7L1uK0MaFT_M"
+        onLoad={onGoogleMapsScript}
+      >
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '400px' }}
           center={center}
@@ -52,9 +59,16 @@ export const MapView: VFC<Props> = memo((props) => {
               <InfoWindow
                 key={shopData.id}
                 position={{ lat: shopData.lat, lng: shopData.lng }}
+                options={{ pixelOffset: mapSize }}
                 onCloseClick={() => onCloseInfoWindow(shopData)}
               >
-                <p>{shopData.address}</p>
+                <div>
+                  <p className="text-center font-bold text-base">
+                    {shopData.name}
+                  </p>
+                  <p className="text-sm mt-1">{shopData.address}</p>
+                  <p className="text-sm mt-1">{shopData.open}</p>
+                </div>
               </InfoWindow>
             ))}
         </GoogleMap>
