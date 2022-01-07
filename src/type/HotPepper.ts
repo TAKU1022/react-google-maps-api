@@ -102,3 +102,13 @@ export type MiddleArea = {
     results_start: number;
   };
 };
+
+export type Genre = {
+  results: {
+    api_version: string;
+    genre: { code: string; name: string }[];
+    results_available: number;
+    results_returned: string;
+    results_start: number;
+  };
+};
