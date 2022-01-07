@@ -8,6 +8,7 @@ import {
 } from 'react';
 import largeAreaData from './data/largeArea.json';
 import middleAreaData from './data/middleArea.json';
+import genreData from './data/genre.json';
 import axios from 'axios';
 import { MapView } from './components/MapView';
 import { LocationForm } from './components/LoactionForm';
@@ -28,6 +29,7 @@ export const App: VFC = () => {
 
   const [largeArea, setLargeArea] = useState<string>('');
   const [middleArea, setMiddleArea] = useState<string>('');
+  const [genre, setGenre] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
   const [hitCount, setHitCount] = useState<number>();
 
@@ -48,6 +50,10 @@ export const App: VFC = () => {
     },
     []
   );
+
+  const onChangeGenre = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+    setGenre(event.target.value);
+  }, []);
 
   const onChangeKeyword = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -71,6 +77,7 @@ export const App: VFC = () => {
             key: process.env.REACT_APP_HOTPEPPER_API_KEY,
             large_area: largeArea,
             middle_area: middleArea,
+            genre,
             keyword,
             count: 100,
             format: 'jsonp',
@@ -98,12 +105,13 @@ export const App: VFC = () => {
         setIsLoading(false);
       }, 1500);
     },
-    [keyword, largeArea, map, middleArea]
+    [keyword, largeArea, map, middleArea, genre]
   );
 
   useEffect(() => {
     setIsLoading(true);
     setLargeArea(largeAreaData.results.large_area[0].code);
+    setGenre(genreData.results.genre[0].code);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -139,10 +147,12 @@ export const App: VFC = () => {
         <LocationForm
           largeAreaData={largeAreaData}
           middleAreaData={middleAreaData}
+          genreData={genreData}
           largeArea={largeArea}
           hitCount={hitCount}
           onChangeLargeArea={onChangeLargeArea}
           onChangeMiddleArea={onChangeMiddleArea}
+          onChangeGenre={onChangeGenre}
           onChangeKeyword={onChangeKeyword}
           onSubmitForm={onSubmitForm}
         />

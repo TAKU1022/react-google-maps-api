@@ -1,13 +1,15 @@
 import { ChangeEvent, FormEvent, memo, VFC } from 'react';
-import { LargeArea, MiddleArea } from '../type/HotPepper';
+import { Genre, LargeArea, MiddleArea } from '../type/HotPepper';
 
 type Props = {
   largeAreaData: LargeArea;
   middleAreaData: MiddleArea;
+  genreData: Genre;
   largeArea: string;
   hitCount?: number;
   onChangeLargeArea: (event: ChangeEvent<HTMLSelectElement>) => void;
   onChangeMiddleArea: (event: ChangeEvent<HTMLSelectElement>) => void;
+  onChangeGenre: (event: ChangeEvent<HTMLSelectElement>) => void;
   onChangeKeyword: (event: ChangeEvent<HTMLInputElement>) => void;
   onSubmitForm: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 };
@@ -16,10 +18,12 @@ export const LocationForm: VFC<Props> = memo((props) => {
   const {
     largeAreaData,
     middleAreaData,
+    genreData,
     largeArea,
     hitCount,
     onChangeLargeArea,
     onChangeMiddleArea,
+    onChangeGenre,
     onChangeKeyword,
     onSubmitForm,
   } = props;
@@ -49,13 +53,23 @@ export const LocationForm: VFC<Props> = memo((props) => {
               </option>
             ))}
         </select>
+        <select className="border-2 rounded p-2 mr-4" onChange={onChangeGenre}>
+          {genreData.results.genre.map((genre) => (
+            <option key={genre.code} value={genre.code}>
+              {genre.name}
+            </option>
+          ))}
+        </select>
         <input
           className="border-2 rounded p-2 mr-4"
           type="text"
           placeholder="キーワード"
           onChange={onChangeKeyword}
         />
-        <button className="bg-gray-300 rounded px-3 py-1" type="submit">
+        <button
+          className="bg-blue-500 text-slate-50 rounded block px-3 py-1 mx-auto mt-4"
+          type="submit"
+        >
           検索する
         </button>
       </form>
