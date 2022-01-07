@@ -30,6 +30,7 @@ export const App: VFC = () => {
   const [middleArea, setMiddleArea] = useState<string>('');
   const [genre, setGenre] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
+  const [wifi, setWifi] = useState<number>();
   const [hitCount, setHitCount] = useState<number>();
 
   const onLoadGoogleMapsScript = useCallback(() => {
@@ -78,6 +79,11 @@ export const App: VFC = () => {
     []
   );
 
+  const onChangeWifi = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.checked ? parseInt(event.target.value) : 0;
+    setWifi(value);
+  }, []);
+
   const onSubmitForm = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -96,6 +102,7 @@ export const App: VFC = () => {
             middle_area: middleArea,
             genre,
             keyword,
+            wifi,
             count: 100,
             format: 'jsonp',
           },
@@ -118,7 +125,7 @@ export const App: VFC = () => {
         setIsLoading(false);
       }, 1500);
     },
-    [keyword, largeArea, map, middleArea, genre]
+    [keyword, largeArea, map, middleArea, genre, wifi]
   );
 
   useEffect(() => {
@@ -172,6 +179,7 @@ export const App: VFC = () => {
           onChangeMiddleArea={onChangeMiddleArea}
           onChangeGenre={onChangeGenre}
           onChangeKeyword={onChangeKeyword}
+          onChangeWifi={onChangeWifi}
           onSubmitForm={onSubmitForm}
         />
       </div>
