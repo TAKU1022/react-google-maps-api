@@ -9,7 +9,7 @@ import { Shop } from '../type/HotPepper';
 
 type Props = {
   isLoading: boolean;
-  mapSize?: google.maps.Size;
+  size?: google.maps.Size;
   center: google.maps.LatLng | google.maps.LatLngLiteral;
   zoom: number;
   shopList: Shop[];
@@ -23,7 +23,7 @@ type Props = {
 export const MapView: VFC<Props> = memo((props) => {
   const {
     isLoading,
-    mapSize,
+    size,
     center,
     zoom,
     shopList,
@@ -59,7 +59,7 @@ export const MapView: VFC<Props> = memo((props) => {
               <InfoWindow
                 key={shopData.id}
                 position={{ lat: shopData.lat, lng: shopData.lng }}
-                options={{ pixelOffset: mapSize }}
+                options={{ pixelOffset: size }}
                 onCloseClick={() => onCloseInfoWindow(shopData)}
               >
                 <div>

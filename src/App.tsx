@@ -18,7 +18,7 @@ const axiosJsonAdapter = require('axios-jsonp');
 export const App: VFC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [mapSize, setMapSize] = useState<google.maps.Size>();
+  const [size, setSize] = useState<google.maps.Size>();
   const [map, setMap] = useState<google.maps.Map>();
   const [center, setCenter] = useState<
     google.maps.LatLng | google.maps.LatLngLiteral
@@ -34,7 +34,7 @@ export const App: VFC = () => {
   const [hitCount, setHitCount] = useState<number>();
 
   const onLoadGoogleMapsScript = useCallback(() => {
-    setMapSize(new google.maps.Size(0, -45));
+    setSize(new google.maps.Size(0, -45));
   }, []);
 
   const onLoadMap = useCallback((map: google.maps.Map) => {
@@ -153,7 +153,7 @@ export const App: VFC = () => {
     <div className="max-w-4xl mx-auto">
       <MapView
         isLoading={isLoading}
-        mapSize={mapSize}
+        size={size}
         center={center}
         zoom={zoom}
         shopList={shopList}
