@@ -25,7 +25,7 @@ export const App: VFC = () => {
   >({ lat: 35.6809591, lng: 139.7673068 });
   const [zoom, setZoom] = useState<number>(17);
   const [shopList, setShopList] = useState<Shop[]>([]);
-  const [infoWindowOptions, setInfoWindowOptions] = useState<Shop[]>([]);
+  const [infoWindowOption, setInfoWindowOption] = useState<Shop>();
 
   const [largeArea, setLargeArea] = useState<string>('');
   const [middleArea, setMiddleArea] = useState<string>('');
@@ -44,17 +44,12 @@ export const App: VFC = () => {
   const onClickMarker = useCallback((shopData: Shop) => {
     setCenter({ lat: shopData.lat, lng: shopData.lng });
     setZoom(16);
-    setInfoWindowOptions((prevState) => [...prevState, shopData]);
+    setInfoWindowOption(shopData);
   }, []);
 
-  const onCloseInfoWindow = useCallback(
-    (shopData: Shop) => {
-      setInfoWindowOptions(
-        infoWindowOptions.filter((prevShopData) => !(prevShopData === shopData))
-      );
-    },
-    [infoWindowOptions]
-  );
+  const onCloseInfoWindow = useCallback(() => {
+    setInfoWindowOption(undefined);
+  }, []);
 
   const onChangeLargeArea = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
@@ -157,7 +152,7 @@ export const App: VFC = () => {
         center={center}
         zoom={zoom}
         shopList={shopList}
-        infoWindowOptions={infoWindowOptions}
+        infoWindowOption={infoWindowOption}
         onGoogleMapsScript={onLoadGoogleMapsScript}
         onLoadMap={onLoadMap}
         onClickMarker={onClickMarker}

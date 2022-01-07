@@ -13,11 +13,11 @@ type Props = {
   center: google.maps.LatLng | google.maps.LatLngLiteral;
   zoom: number;
   shopList: Shop[];
-  infoWindowOptions: Shop[];
+  infoWindowOption?: Shop;
   onGoogleMapsScript: () => void;
   onLoadMap: (map: google.maps.Map) => void;
   onClickMarker: (shopData: Shop) => void;
-  onCloseInfoWindow: (shopData: Shop) => void;
+  onCloseInfoWindow: () => void;
 };
 
 export const MapView: VFC<Props> = memo((props) => {
@@ -27,7 +27,7 @@ export const MapView: VFC<Props> = memo((props) => {
     center,
     zoom,
     shopList,
-    infoWindowOptions,
+    infoWindowOption,
     onGoogleMapsScript,
     onLoadMap,
     onClickMarker,
@@ -54,23 +54,24 @@ export const MapView: VFC<Props> = memo((props) => {
                 onClick={() => onClickMarker(shopData)}
               />
             ))}
-          {infoWindowOptions.length === 0 ||
-            infoWindowOptions.map((shopData) => (
-              <InfoWindow
-                key={shopData.id}
-                position={{ lat: shopData.lat, lng: shopData.lng }}
-                options={{ pixelOffset: size }}
-                onCloseClick={() => onCloseInfoWindow(shopData)}
-              >
-                <div>
-                  <p className="text-center font-bold text-base">
-                    {shopData.name}
-                  </p>
-                  <p className="text-sm mt-1">{shopData.address}</p>
-                  <p className="text-sm mt-1">{shopData.open}</p>
-                </div>
-              </InfoWindow>
-            ))}
+          {infoWindowOption && (
+            <InfoWindow
+              position={{
+                lat: infoWindowOption.lat,
+                lng: infoWindowOption.lng,
+              }}
+              options={{ pixelOffset: size }}
+              onCloseClick={onCloseInfoWindow}
+            >
+              <div>
+                <p className="text-center font-bold text-base">
+                  {infoWindowOption.name}
+                </p>
+                <p className="text-sm mt-1">{infoWindowOption.address}</p>
+                <p className="text-sm mt-1">{infoWindowOption.open}</p>
+              </div>
+            </InfoWindow>
+          )}
         </GoogleMap>
       </LoadScript>
       {isLoading && (
