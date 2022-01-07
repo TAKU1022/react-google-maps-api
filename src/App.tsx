@@ -31,6 +31,8 @@ export const App: VFC = () => {
   const [genre, setGenre] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
   const [wifi, setWifi] = useState<number>();
+  const [freeDrink, setFreeDrink] = useState<number>();
+  const [freeFood, setFreeFood] = useState<number>();
   const [hitCount, setHitCount] = useState<number>();
 
   const onLoadGoogleMapsScript = useCallback(() => {
@@ -84,6 +86,21 @@ export const App: VFC = () => {
     setWifi(value);
   }, []);
 
+  const onChangeFreeDrink = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.checked ? parseInt(event.target.value) : 0;
+      setFreeDrink(value);
+    },
+    []
+  );
+  const onChangeFreeFood = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.checked ? parseInt(event.target.value) : 0;
+      setFreeFood(value);
+    },
+    []
+  );
+
   const onSubmitForm = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -103,6 +120,8 @@ export const App: VFC = () => {
             genre,
             keyword,
             wifi,
+            free_drink: freeDrink,
+            free_food: freeFood,
             count: 100,
             format: 'jsonp',
           },
@@ -180,6 +199,8 @@ export const App: VFC = () => {
           onChangeGenre={onChangeGenre}
           onChangeKeyword={onChangeKeyword}
           onChangeWifi={onChangeWifi}
+          onChangeFreeDrink={onChangeFreeDrink}
+          onChangeFreeFood={onChangeFreeFood}
           onSubmitForm={onSubmitForm}
         />
       </div>

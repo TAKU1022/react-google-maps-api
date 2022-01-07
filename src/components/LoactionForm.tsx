@@ -13,6 +13,8 @@ type Props = {
   onChangeGenre: (event: ChangeEvent<HTMLSelectElement>) => void;
   onChangeKeyword: (event: ChangeEvent<HTMLInputElement>) => void;
   onChangeWifi: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChangeFreeDrink: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChangeFreeFood: (event: ChangeEvent<HTMLInputElement>) => void;
   onSubmitForm: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 };
 
@@ -29,6 +31,8 @@ export const LocationForm: VFC<Props> = memo((props) => {
     onChangeGenre,
     onChangeKeyword,
     onChangeWifi,
+    onChangeFreeDrink,
+    onChangeFreeFood,
     onSubmitForm,
   } = props;
 
@@ -92,14 +96,26 @@ export const LocationForm: VFC<Props> = memo((props) => {
           className="inline-flex justify-center cursor-pointer items-center mt-4 mr-6"
           htmlFor="free-drink"
         >
-          <input id="free-drink" className="mr-1" type="checkbox" />
+          <input
+            id="free-drink"
+            className="mr-1"
+            type="checkbox"
+            value={1}
+            onChange={onChangeFreeDrink}
+          />
           <span>飲み放題</span>
         </label>
         <label
           className="inline-flex justify-center cursor-pointer items-center mt-4 mr-6"
           htmlFor="free-food"
         >
-          <input id="free-food" className="mr-1" type="checkbox" />
+          <input
+            id="free-food"
+            className="mr-1"
+            type="checkbox"
+            value={1}
+            onChange={onChangeFreeFood}
+          />
           <span>食べ放題</span>
         </label>
         <button
