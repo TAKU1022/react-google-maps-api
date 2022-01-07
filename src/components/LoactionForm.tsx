@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, memo, VFC } from 'react';
 import { Genre, LargeArea, MiddleArea } from '../type/HotPepper';
 
 type Props = {
+  isLoading: boolean;
   largeAreaData: LargeArea;
   middleAreaData: MiddleArea;
   genreData: Genre;
@@ -16,6 +17,7 @@ type Props = {
 
 export const LocationForm: VFC<Props> = memo((props) => {
   const {
+    isLoading,
     largeAreaData,
     middleAreaData,
     genreData,
@@ -67,8 +69,9 @@ export const LocationForm: VFC<Props> = memo((props) => {
           onChange={onChangeKeyword}
         />
         <button
-          className="bg-blue-500 text-slate-50 rounded block px-3 py-1 mx-auto mt-4"
+          className={`bg-blue-500 text-slate-50 rounded block px-3 py-1 mx-auto mt-4 disabled:bg-gray-400`}
           type="submit"
+          disabled={isLoading}
         >
           検索する
         </button>
