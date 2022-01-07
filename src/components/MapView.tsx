@@ -11,7 +11,6 @@ type Props = {
   isLoading: boolean;
   size?: google.maps.Size;
   center: google.maps.LatLng | google.maps.LatLngLiteral;
-  zoom: number;
   shopList: Shop[];
   infoWindowOption?: Shop;
   onGoogleMapsScript: () => void;
@@ -25,7 +24,6 @@ export const MapView: VFC<Props> = memo((props) => {
     isLoading,
     size,
     center,
-    zoom,
     shopList,
     infoWindowOption,
     onGoogleMapsScript,
@@ -43,7 +41,7 @@ export const MapView: VFC<Props> = memo((props) => {
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '400px' }}
           center={center}
-          zoom={zoom}
+          zoom={16}
           onLoad={onLoadMap}
         >
           {shopList.length === 0 ||
