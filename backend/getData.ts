@@ -2,9 +2,9 @@ import fs from 'fs';
 import axios from 'axios';
 require('dotenv').config();
 
-const getLargeArea = async () => {
+const fetchLargeArea = async () => {
   const res = await axios.get(
-    `https://webservice.recruit.co.jp/hotpepper/large_area/v1/`,
+    'http://webservice.recruit.co.jp/hotpepper/large_area/v1/',
     {
       params: {
         key: process.env.REACT_APP_HOTPEPPER_API_KEY,
@@ -16,9 +16,9 @@ const getLargeArea = async () => {
   console.log('finish load largeArea data');
 };
 
-const getMiddleArea = async () => {
+const fetchMiddleArea = async () => {
   const res = await axios.get(
-    `https://webservice.recruit.co.jp/hotpepper/middle_area/v1/`,
+    'http://webservice.recruit.co.jp/hotpepper/middle_area/v1/',
     {
       params: {
         key: process.env.REACT_APP_HOTPEPPER_API_KEY,
@@ -30,5 +30,5 @@ const getMiddleArea = async () => {
   console.log('finish load middleArea data');
 };
 
-getLargeArea();
-getMiddleArea();
+fetchLargeArea();
+fetchMiddleArea();
