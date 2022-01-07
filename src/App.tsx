@@ -46,10 +46,6 @@ export const App: VFC = () => {
     );
   };
 
-  useEffect(() => {
-    console.log(infoWindowOptions);
-  }, [infoWindowOptions]);
-
   const onChangeLargeArea = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       setLargeArea(event.target.value);
