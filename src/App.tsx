@@ -23,7 +23,7 @@ export const App: VFC = () => {
   const [center, setCenter] = useState<
     google.maps.LatLng | google.maps.LatLngLiteral
   >({ lat: 35.6809591, lng: 139.7673068 });
-  const [zoom, setZoom] = useState<number>(16);
+  const [zoom, setZoom] = useState<number>(17);
   const [shopList, setShopList] = useState<Shop[]>([]);
   const [infoWindowOptions, setInfoWindowOptions] = useState<Shop[]>([]);
 
@@ -42,6 +42,8 @@ export const App: VFC = () => {
   }, []);
 
   const onClickMarker = useCallback((shopData: Shop) => {
+    setCenter({ lat: shopData.lat, lng: shopData.lng });
+    setZoom(16);
     setInfoWindowOptions((prevState) => [...prevState, shopData]);
   }, []);
 
