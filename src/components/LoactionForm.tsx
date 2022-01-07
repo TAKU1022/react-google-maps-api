@@ -31,7 +31,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           className="border-2 rounded p-2 mr-4"
           onChange={onChangeLargeArea}
         >
-          {largeAreaData.results.large_area.map((area: any) => (
+          {largeAreaData.results.large_area.map((area) => (
             <option key={area.code} value={area.code}>
               {area.name}
             </option>
@@ -42,8 +42,8 @@ export const LocationForm: VFC<Props> = memo((props) => {
           onChange={onChangeMiddleArea}
         >
           {middleAreaData.results.middle_area
-            .filter((areaData: any) => largeArea === areaData.large_area.code)
-            .map((area: any) => (
+            .filter((areaData) => areaData.large_area.code === largeArea)
+            .map((area) => (
               <option key={area.code} value={area.code}>
                 {area.name}
               </option>
