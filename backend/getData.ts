@@ -30,5 +30,20 @@ const fetchMiddleArea = async () => {
   console.log('finish load middleArea data');
 };
 
+const fetchGenre = async () => {
+  const res = await axios.get(
+    'http://webservice.recruit.co.jp/hotpepper/genre/v1/',
+    {
+      params: {
+        key: process.env.REACT_APP_HOTPEPPER_API_KEY,
+        format: 'json',
+      },
+    }
+  );
+  fs.writeFileSync('./src/data/genre.json', JSON.stringify(res.data));
+  console.log('finish load genre data');
+};
+
 fetchLargeArea();
 fetchMiddleArea();
+fetchGenre();
