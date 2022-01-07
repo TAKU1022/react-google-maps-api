@@ -8,7 +8,7 @@ export type Gourmet = {
   };
 };
 
-interface Shop {
+export type Shop = {
   access: string;
   address: string;
   band: string;
@@ -64,7 +64,7 @@ interface Shop {
   urls: { pc: string };
   wedding: string;
   wifi: string;
-}
+};
 
 export type LargeArea = {
   results: {
