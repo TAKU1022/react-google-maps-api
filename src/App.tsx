@@ -81,6 +81,7 @@ export const App: VFC = () => {
       event.preventDefault();
       setIsLoading(true);
       setShopList([]);
+      setInfoWindowOption(undefined);
 
       const bounds = new google.maps.LatLngBounds();
       const res = await axios.get<Gourmet>(
