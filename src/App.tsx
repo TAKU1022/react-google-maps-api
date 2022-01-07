@@ -11,6 +11,7 @@ import middleAreaData from './data/middleArea.json';
 import axios from 'axios';
 import { MapView } from './components/MapView';
 import { LocationForm } from './components/LoactionForm';
+import { Gourmet } from './type/HotPepper';
 const axiosJsonAdapter = require('axios-jsonp');
 
 export const App: VFC = () => {
@@ -62,7 +63,7 @@ export const App: VFC = () => {
       setMarkerLocations([]);
 
       const bounds = new google.maps.LatLngBounds();
-      const res = await axios.get(
+      const res = await axios.get<Gourmet>(
         'https://webservice.recruit.co.jp/hotpepper/gourmet/v1/',
         {
           adapter: axiosJsonAdapter,
@@ -76,10 +77,11 @@ export const App: VFC = () => {
           },
         }
       );
+      const gourmetData = res.data;
 
-      if (res.data.results.shop) {
-        setHitCount(res.data.results.shop.length);
-        res.data.results.shop.forEach((shopData: any) => {
+      if (gourmetData.results.shop) {
+        setHitCount(parseInt(gourmetData.results.results_returned));
+        gourmetData.results.shop.forEach((shopData: any) => {
           const latlng = {
             lat: shopData.lat,
             lng: shopData.lng,
