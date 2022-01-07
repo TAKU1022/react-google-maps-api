@@ -104,7 +104,6 @@ export const App: VFC = () => {
   useEffect(() => {
     setIsLoading(true);
     setLargeArea(largeAreaData.results.large_area[0].code);
-    setMiddleArea(middleAreaData.results.middle_area[0].code);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -119,6 +118,13 @@ export const App: VFC = () => {
       setIsLoading(false);
     }, 3000);
   }, []);
+
+  useEffect(() => {
+    const filteredMiddleArea = middleAreaData.results.middle_area.filter(
+      (area) => area.large_area.code === largeArea
+    );
+    setMiddleArea(filteredMiddleArea[0]?.code);
+  }, [largeArea]);
 
   return (
     <div className="max-w-4xl mx-auto">
