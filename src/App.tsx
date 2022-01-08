@@ -30,9 +30,9 @@ export const App: VFC = () => {
   const [middleArea, setMiddleArea] = useState<string>('');
   const [genre, setGenre] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
-  const [wifi, setWifi] = useState<number>();
-  const [freeDrink, setFreeDrink] = useState<number>();
-  const [freeFood, setFreeFood] = useState<number>();
+  const [wifi, setWifi] = useState<number>(0);
+  const [freeDrink, setFreeDrink] = useState<number>(0);
+  const [freeFood, setFreeFood] = useState<number>(0);
   const [hitCount, setHitCount] = useState<number>();
 
   const onLoadGoogleMapsScript = useCallback(() => {
@@ -128,6 +128,7 @@ export const App: VFC = () => {
         }
       );
       const gourmetData = res.data;
+      console.log(freeFood);
 
       if (gourmetData.results.shop) {
         setHitCount(parseInt(gourmetData.results.results_returned));
