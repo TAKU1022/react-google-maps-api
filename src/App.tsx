@@ -128,7 +128,6 @@ export const App: VFC = () => {
         }
       );
       const gourmetData = res.data;
-      console.log(freeFood);
 
       if (gourmetData.results.shop) {
         setHitCount(parseInt(gourmetData.results.results_returned));
