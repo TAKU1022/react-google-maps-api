@@ -189,9 +189,6 @@ export const App: VFC = () => {
       <div className="mt-8">
         <LocationForm
           isLoading={isLoading}
-          largeAreaData={largeAreaData}
-          middleAreaData={middleAreaData}
-          genreData={genreData}
           largeArea={largeArea}
           hitCount={hitCount}
           onChangeLargeArea={onChangeLargeArea}

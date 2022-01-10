@@ -1,11 +1,10 @@
 import { ChangeEvent, FormEvent, memo, VFC } from 'react';
-import { Genre, LargeArea, MiddleArea } from '../type/HotPepper';
+import largeAreaData from '../data/largeArea.json';
+import middleAreaData from '../data/middleArea.json';
+import genreData from '../data/genre.json';
 
 type Props = {
   isLoading: boolean;
-  largeAreaData: LargeArea;
-  middleAreaData: MiddleArea;
-  genreData: Genre;
   largeArea: string;
   hitCount?: number;
   onChangeLargeArea: (event: ChangeEvent<HTMLSelectElement>) => void;
@@ -21,9 +20,6 @@ type Props = {
 export const LocationForm: VFC<Props> = memo((props) => {
   const {
     isLoading,
-    largeAreaData,
-    middleAreaData,
-    genreData,
     largeArea,
     hitCount,
     onChangeLargeArea,
