@@ -62,8 +62,23 @@ export const MapView: VFC<Props> = memo((props) => {
               onCloseClick={onCloseInfoWindow}
             >
               <div>
-                <p className="text-center font-bold text-base">
+                <p className="flex justify-center font-bold text-base">
                   {infoWindowOption.name}
+                </p>
+                <img
+                  className="mt-2 mx-auto"
+                  src={infoWindowOption.photo.pc.l}
+                  alt={infoWindowOption.name}
+                />
+                <p className="text-sm text-blue-600 mt-2">
+                  <a
+                    className="hover:underline"
+                    href={infoWindowOption.urls.pc}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {infoWindowOption.urls.pc}
+                  </a>
                 </p>
                 <p className="text-sm mt-1">{infoWindowOption.address}</p>
                 <p className="text-sm mt-1">{infoWindowOption.open}</p>
