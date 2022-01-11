@@ -174,7 +174,7 @@ export const App: VFC = () => {
   }, [largeArea]);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-5xl pt-4 px-4 pb-10 mx-auto">
       <MapView
         isLoading={isLoading}
         size={size}
@@ -186,7 +186,7 @@ export const App: VFC = () => {
         onClickMarker={onClickMarker}
         onCloseInfoWindow={onCloseInfoWindow}
       />
-      <div className="mt-8">
+      <div>
         <LocationForm
           isLoading={isLoading}
           largeArea={largeArea}

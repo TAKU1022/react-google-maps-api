@@ -66,13 +66,13 @@ export const MapView: VFC<Props> = memo((props) => {
                   {infoWindowOption.name}
                 </p>
                 <img
-                  className="mt-2 mx-auto"
+                  className="max-w-full mt-2 mx-auto"
                   src={infoWindowOption.photo.pc.l}
                   alt={infoWindowOption.name}
                 />
                 <p className="text-sm text-blue-600 mt-2">
                   <a
-                    className="hover:underline"
+                    className="break-words hover:underline"
                     href={infoWindowOption.urls.pc}
                     target="_blank"
                     rel="noopener noreferrer"

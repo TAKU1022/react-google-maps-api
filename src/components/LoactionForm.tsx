@@ -36,9 +36,9 @@ export const LocationForm: VFC<Props> = memo((props) => {
     <>
       <p className="mt-6">※検索上限は最大100件です。</p>
 
-      <form className="mt-2" onSubmit={onSubmitForm}>
+      <form onSubmit={onSubmitForm}>
         <select
-          className="border-2 rounded px-4 py-2 mr-4"
+          className="border-2 rounded px-4 py-2 mt-4 mr-4"
           onChange={onChangeLargeArea}
         >
           {largeAreaData.results.large_area.map((area) => (
@@ -48,7 +48,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           ))}
         </select>
         <select
-          className="border-2 rounded px-4 py-2 mr-4"
+          className="border-2 rounded px-4 py-2 mt-4 mr-4"
           onChange={onChangeMiddleArea}
         >
           {middleAreaData.results.middle_area
@@ -60,7 +60,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
             ))}
         </select>
         <select
-          className="border-2 rounded px-4 py-2 mr-4"
+          className="border-2 rounded px-4 py-2 mt-4 mr-4"
           onChange={onChangeGenre}
         >
           {genreData.results.genre.map((genre) => (
@@ -70,7 +70,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           ))}
         </select>
         <input
-          className="border-2 rounded p-2 mr-4"
+          className="border-2 rounded p-2 mt-4 mr-4"
           type="text"
           placeholder="キーワード"
           onChange={onChangeKeyword}
@@ -115,7 +115,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           <span>食べ放題</span>
         </label>
         <button
-          className="bg-blue-500 text-gray-50 rounded block px-3 py-1 mx-auto mt-4 disabled:bg-gray-400"
+          className="bg-blue-500 text-gray-50 rounded block px-3 py-1 mt-6 mx-auto disabled:bg-gray-400"
           type="submit"
           disabled={isLoading}
         >
