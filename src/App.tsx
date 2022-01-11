@@ -101,6 +101,9 @@ export const App: VFC = () => {
     []
   );
 
+  const finishLoading = (time: number) =>
+    new Promise(() => setTimeout(() => setIsLoading(false), time));
+
   const onSubmitForm = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -140,9 +143,7 @@ export const App: VFC = () => {
         alert('エラー発生');
       }
 
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1500);
+      finishLoading(1500);
     },
     [keyword, largeArea, map, middleArea, genre, wifi, freeDrink, freeFood]
   );
@@ -161,9 +162,7 @@ export const App: VFC = () => {
       });
     }
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    finishLoading(3000);
   }, []);
 
   useEffect(() => {
