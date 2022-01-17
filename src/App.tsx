@@ -123,7 +123,7 @@ export const App: VFC = () => {
       (area) => area.large_area.code === gourmetForm.largeArea
     );
     changeMiddleArea(filteredMiddleArea[0]?.code);
-  }, [changeMiddleArea, gourmetForm.largeArea]);
+  }, [gourmetForm.largeArea, changeMiddleArea]);
 
   return (
     <div className="max-w-5xl pt-4 px-4 pb-10 mx-auto">
