@@ -101,13 +101,13 @@ export const App: VFC = () => {
     []
   );
 
-  const finishLoading = (time: number) =>
-    new Promise(() => setTimeout(() => setIsLoading(false), time));
+  const toggleIsLoading = (bool: boolean, time: number = 0) =>
+    new Promise(() => setTimeout(() => setIsLoading(bool), time));
 
   const onSubmitForm = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      setIsLoading(true);
+      toggleIsLoading(true);
       setShopList([]);
       setInfoWindowOption(undefined);
 
@@ -143,13 +143,13 @@ export const App: VFC = () => {
         alert('エラー発生');
       }
 
-      finishLoading(1500);
+      toggleIsLoading(false, 1500);
     },
     [keyword, largeArea, map, middleArea, genre, wifi, freeDrink, freeFood]
   );
 
   useEffect(() => {
-    setIsLoading(true);
+    toggleIsLoading(true);
     setLargeArea(largeAreaData.results.large_area[0].code);
     setGenre(genreData.results.genre[0].code);
 
@@ -162,7 +162,7 @@ export const App: VFC = () => {
       });
     }
 
-    finishLoading(3000);
+    toggleIsLoading(false, 3000);
   }, []);
 
   useEffect(() => {
