@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  FormEvent,
-  useCallback,
-  useEffect,
-  useState,
-  VFC,
-} from 'react';
+import { FormEvent, useCallback, useEffect, useState, VFC } from 'react';
 import largeAreaData from './data/largeArea.json';
 import middleAreaData from './data/middleArea.json';
 import genreData from './data/genre.json';
@@ -13,6 +6,7 @@ import axios from 'axios';
 import { MapView } from './components/MapView';
 import { LocationForm } from './components/LoactionForm';
 import { Gourmet, Shop } from './type/HotPepper';
+import { useGourmetForm } from './hooks/useGourmetForm';
 const axiosJsonAdapter = require('axios-jsonp');
 
 export const App: VFC = () => {
@@ -26,13 +20,8 @@ export const App: VFC = () => {
   const [shopList, setShopList] = useState<Shop[]>([]);
   const [infoWindowOption, setInfoWindowOption] = useState<Shop>();
 
-  const [largeArea, setLargeArea] = useState<string>('');
-  const [middleArea, setMiddleArea] = useState<string>('');
-  const [genre, setGenre] = useState<string>('');
-  const [keyword, setKeyword] = useState<string>('');
-  const [wifi, setWifi] = useState<number>(0);
-  const [freeDrink, setFreeDrink] = useState<number>(0);
-  const [freeFood, setFreeFood] = useState<number>(0);
+  const { gourmetForm, changeLargeArea, changeMiddleArea, changeGenre } =
+    useGourmetForm();
   const [hitCount, setHitCount] = useState<number>();
 
   const onLoadGoogleMapsScript = useCallback(() => {
@@ -56,51 +45,6 @@ export const App: VFC = () => {
     setInfoWindowOption(undefined);
   }, []);
 
-  const onChangeLargeArea = useCallback(
-    (event: ChangeEvent<HTMLSelectElement>) => {
-      setLargeArea(event.target.value);
-    },
-    []
-  );
-
-  const onChangeMiddleArea = useCallback(
-    (event: ChangeEvent<HTMLSelectElement>) => {
-      setMiddleArea(event.target.value);
-    },
-    []
-  );
-
-  const onChangeGenre = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
-    setGenre(event.target.value);
-  }, []);
-
-  const onChangeKeyword = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setKeyword(event.target.value);
-    },
-    []
-  );
-
-  const onChangeWifi = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.checked ? parseInt(event.target.value) : 0;
-    setWifi(value);
-  }, []);
-
-  const onChangeFreeDrink = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.checked ? parseInt(event.target.value) : 0;
-      setFreeDrink(value);
-    },
-    []
-  );
-  const onChangeFreeFood = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.checked ? parseInt(event.target.value) : 0;
-      setFreeFood(value);
-    },
-    []
-  );
-
   const toggleIsLoading = (bool: boolean, time: number = 0) =>
     new Promise(() => setTimeout(() => setIsLoading(bool), time));
 
@@ -118,13 +62,13 @@ export const App: VFC = () => {
           adapter: axiosJsonAdapter,
           params: {
             key: process.env.REACT_APP_HOTPEPPER_API_KEY,
-            large_area: largeArea,
-            middle_area: middleArea,
-            genre,
-            keyword,
-            wifi,
-            free_drink: freeDrink,
-            free_food: freeFood,
+            large_area: gourmetForm.largeArea,
+            middle_area: gourmetForm.middleArea,
+            genre: gourmetForm.genre,
+            keyword: gourmetForm.keyword,
+            wifi: gourmetForm.wifi,
+            free_drink: gourmetForm.freeDrink,
+            free_food: gourmetForm.freeFood,
             count: 100,
             format: 'jsonp',
           },
@@ -145,13 +89,22 @@ export const App: VFC = () => {
 
       toggleIsLoading(false, 1500);
     },
-    [keyword, largeArea, map, middleArea, genre, wifi, freeDrink, freeFood]
+    [
+      gourmetForm.freeDrink,
+      gourmetForm.freeFood,
+      gourmetForm.genre,
+      gourmetForm.keyword,
+      gourmetForm.largeArea,
+      gourmetForm.middleArea,
+      gourmetForm.wifi,
+      map,
+    ]
   );
 
   useEffect(() => {
     toggleIsLoading(true);
-    setLargeArea(largeAreaData.results.large_area[0].code);
-    setGenre(genreData.results.genre[0].code);
+    changeLargeArea(largeAreaData.results.large_area[0].code);
+    changeGenre(genreData.results.genre[0].code);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -163,14 +116,14 @@ export const App: VFC = () => {
     }
 
     toggleIsLoading(false, 3000);
-  }, []);
+  }, [changeGenre, changeLargeArea]);
 
   useEffect(() => {
     const filteredMiddleArea = middleAreaData.results.middle_area.filter(
-      (area) => area.large_area.code === largeArea
+      (area) => area.large_area.code === gourmetForm.largeArea
     );
-    setMiddleArea(filteredMiddleArea[0]?.code);
-  }, [largeArea]);
+    changeMiddleArea(filteredMiddleArea[0]?.code);
+  }, [changeMiddleArea, gourmetForm.largeArea]);
 
   return (
     <div className="max-w-5xl pt-4 px-4 pb-10 mx-auto">
@@ -188,15 +141,7 @@ export const App: VFC = () => {
       <div>
         <LocationForm
           isLoading={isLoading}
-          largeArea={largeArea}
           hitCount={hitCount}
-          onChangeLargeArea={onChangeLargeArea}
-          onChangeMiddleArea={onChangeMiddleArea}
-          onChangeGenre={onChangeGenre}
-          onChangeKeyword={onChangeKeyword}
-          onChangeWifi={onChangeWifi}
-          onChangeFreeDrink={onChangeFreeDrink}
-          onChangeFreeFood={onChangeFreeFood}
           onSubmitForm={onSubmitForm}
         />
       </div>

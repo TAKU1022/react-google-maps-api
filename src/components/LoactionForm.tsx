@@ -1,27 +1,19 @@
-import { ChangeEvent, FormEvent, memo, VFC } from 'react';
+import { FormEvent, memo, VFC } from 'react';
 import largeAreaData from '../data/largeArea.json';
 import middleAreaData from '../data/middleArea.json';
 import genreData from '../data/genre.json';
+import { useGourmetForm } from '../hooks/useGourmetForm';
 
 type Props = {
   isLoading: boolean;
-  largeArea: string;
   hitCount?: number;
-  onChangeLargeArea: (event: ChangeEvent<HTMLSelectElement>) => void;
-  onChangeMiddleArea: (event: ChangeEvent<HTMLSelectElement>) => void;
-  onChangeGenre: (event: ChangeEvent<HTMLSelectElement>) => void;
-  onChangeKeyword: (event: ChangeEvent<HTMLInputElement>) => void;
-  onChangeWifi: (event: ChangeEvent<HTMLInputElement>) => void;
-  onChangeFreeDrink: (event: ChangeEvent<HTMLInputElement>) => void;
-  onChangeFreeFood: (event: ChangeEvent<HTMLInputElement>) => void;
   onSubmitForm: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 };
 
 export const LocationForm: VFC<Props> = memo((props) => {
+  const { isLoading, hitCount, onSubmitForm } = props;
   const {
-    isLoading,
-    largeArea,
-    hitCount,
+    gourmetForm,
     onChangeLargeArea,
     onChangeMiddleArea,
     onChangeGenre,
@@ -29,8 +21,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
     onChangeWifi,
     onChangeFreeDrink,
     onChangeFreeFood,
-    onSubmitForm,
-  } = props;
+  } = useGourmetForm();
 
   return (
     <>
@@ -52,7 +43,9 @@ export const LocationForm: VFC<Props> = memo((props) => {
           onChange={onChangeMiddleArea}
         >
           {middleAreaData.results.middle_area
-            .filter((areaData) => areaData.large_area.code === largeArea)
+            .filter(
+              (areaData) => areaData.large_area.code === gourmetForm.largeArea
+            )
             .map((area) => (
               <option key={area.code} value={area.code}>
                 {area.name}
