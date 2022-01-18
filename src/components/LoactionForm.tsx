@@ -3,15 +3,15 @@ import largeAreaData from '../data/largeArea.json';
 import middleAreaData from '../data/middleArea.json';
 import genreData from '../data/genre.json';
 import { useGourmetForm } from '../hooks/useGourmetForm';
+import { useMapLoading } from '../hooks/useMapLoading';
 
 type Props = {
-  isLoading: boolean;
   hitCount?: number;
   onSubmitForm: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 };
 
 export const LocationForm: VFC<Props> = memo((props) => {
-  const { isLoading, hitCount, onSubmitForm } = props;
+  const { hitCount, onSubmitForm } = props;
   const {
     gourmetForm,
     onChangeLargeArea,
@@ -22,6 +22,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
     onChangeFreeDrink,
     onChangeFreeFood,
   } = useGourmetForm();
+  const { isLoading } = useMapLoading();
 
   return (
     <>

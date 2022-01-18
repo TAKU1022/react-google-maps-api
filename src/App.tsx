@@ -7,10 +7,11 @@ import { MapView } from './components/MapView';
 import { LocationForm } from './components/LoactionForm';
 import { Gourmet, Shop } from './type/HotPepper';
 import { useGourmetForm } from './hooks/useGourmetForm';
+import { useMapLoading } from './hooks/useMapLoading';
 const axiosJsonAdapter = require('axios-jsonp');
 
 export const App: VFC = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toggleIsLoading } = useMapLoading();
 
   const [size, setSize] = useState<google.maps.Size>();
   const [map, setMap] = useState<google.maps.Map>();
@@ -44,9 +45,6 @@ export const App: VFC = () => {
   const onCloseInfoWindow = useCallback(() => {
     setInfoWindowOption(undefined);
   }, []);
-
-  const toggleIsLoading = (bool: boolean, time: number = 0) =>
-    new Promise(() => setTimeout(() => setIsLoading(bool), time));
 
   const onSubmitForm = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -90,6 +88,7 @@ export const App: VFC = () => {
       toggleIsLoading(false, 1500);
     },
     [
+      toggleIsLoading,
       gourmetForm.freeDrink,
       gourmetForm.freeFood,
       gourmetForm.genre,
@@ -116,7 +115,8 @@ export const App: VFC = () => {
     }
 
     toggleIsLoading(false, 3000);
-  }, [changeGenre, changeLargeArea]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const filteredMiddleArea = middleAreaData.results.middle_area.filter(
@@ -128,7 +128,6 @@ export const App: VFC = () => {
   return (
     <div className="max-w-5xl pt-4 px-4 pb-10 mx-auto">
       <MapView
-        isLoading={isLoading}
         size={size}
         center={center}
         shopList={shopList}
@@ -139,11 +138,7 @@ export const App: VFC = () => {
         onCloseInfoWindow={onCloseInfoWindow}
       />
       <div>
-        <LocationForm
-          isLoading={isLoading}
-          hitCount={hitCount}
-          onSubmitForm={onSubmitForm}
-        />
+        <LocationForm hitCount={hitCount} onSubmitForm={onSubmitForm} />
       </div>
     </div>
   );

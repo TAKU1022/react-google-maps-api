@@ -6,9 +6,9 @@ import {
   Marker,
 } from '@react-google-maps/api';
 import { Shop } from '../type/HotPepper';
+import { useMapLoading } from '../hooks/useMapLoading';
 
 type Props = {
-  isLoading: boolean;
   size?: google.maps.Size;
   center: google.maps.LatLng | google.maps.LatLngLiteral;
   shopList: Shop[];
@@ -21,7 +21,6 @@ type Props = {
 
 export const MapView: VFC<Props> = memo((props) => {
   const {
-    isLoading,
     size,
     center,
     shopList,
@@ -31,6 +30,7 @@ export const MapView: VFC<Props> = memo((props) => {
     onClickMarker,
     onCloseInfoWindow,
   } = props;
+  const { isLoading } = useMapLoading();
 
   return (
     <div className="relative">
