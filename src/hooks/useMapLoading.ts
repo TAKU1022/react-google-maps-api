@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { MapLoadingContext } from '../contexts/MapLoadingProvider';
 
 export const useMapLoading = () => {
@@ -10,9 +10,12 @@ export const useMapLoading = () => {
 
   const { isLoading, setIsLoading } = context;
 
-  const toggleIsLoading = (bool: boolean, time: number = 0) => {
-    return new Promise(() => setTimeout(() => setIsLoading(bool), time));
-  };
+  const toggleIsLoading = useCallback(
+    (bool: boolean, time: number = 0) => {
+      return new Promise(() => setTimeout(() => setIsLoading(bool), time));
+    },
+    [setIsLoading]
+  );
 
   return {
     isLoading,
