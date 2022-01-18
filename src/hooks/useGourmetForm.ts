@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useContext } from 'react';
-import { GourmetFormContext } from '../contexts/GourmetFormProvider';
+import { GourmetFormContext } from '../contexts/GourmetForm/GourmetFormProvider';
 
 export const useGourmetForm = () => {
   const context = useContext(GourmetFormContext);
@@ -8,98 +8,91 @@ export const useGourmetForm = () => {
     throw new Error('useGourmetForm must be used within a GourmetFormProvider');
   }
 
-  const { gourmetForm, setGourmetForm } = context;
+  const { gourmetForm, dispatch } = context;
 
   const changeLargeArea = useCallback(
     (value: string) => {
-      setGourmetForm((prevState) => {
-        return { ...prevState, largeArea: value };
-      });
+      dispatch({ type: 'UPDATE_LARGE_AREA', payload: { largeArea: value } });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   const changeMiddleArea = useCallback(
     (value: string) => {
-      setGourmetForm((prevState) => {
-        return { ...prevState, middleArea: value };
-      });
+      dispatch({ type: 'UPDATE_MIDDLE_AREA', payload: { middleArea: value } });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   const changeGenre = useCallback(
     (value: string) => {
-      setGourmetForm((prevState) => {
-        return { ...prevState, genre: value };
-      });
+      dispatch({ type: 'UPDATE_GENRE', payload: { genre: value } });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   const onChangeLargeArea = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
-      setGourmetForm((prevState) => {
-        return { ...prevState, largeArea: event.target.value };
+      dispatch({
+        type: 'UPDATE_LARGE_AREA',
+        payload: { largeArea: event.target.value },
       });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   const onChangeMiddleArea = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
-      setGourmetForm((prevState) => {
-        return { ...prevState, middleArea: event.target.value };
+      dispatch({
+        type: 'UPDATE_MIDDLE_AREA',
+        payload: { middleArea: event.target.value },
       });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   const onChangeGenre = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
-      setGourmetForm((prevState) => {
-        return { ...prevState, genre: event.target.value };
+      dispatch({
+        type: 'UPDATE_GENRE',
+        payload: { genre: event.target.value },
       });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   const onChangeKeyword = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      setGourmetForm((prevState) => {
-        return { ...prevState, keyword: event.target.value };
+      dispatch({
+        type: 'UPDATE_KEYWORD',
+        payload: { keyword: event.target.value },
       });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   const onChangeWifi = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.checked ? parseInt(event.target.value) : 0;
-      setGourmetForm((prevState) => {
-        return { ...prevState, wifi: value };
-      });
+      dispatch({ type: 'UPDATE_WIFI', payload: { wifi: value } });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   const onChangeFreeDrink = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.checked ? parseInt(event.target.value) : 0;
-      setGourmetForm((prevState) => {
-        return { ...prevState, wifi: value };
-      });
+      dispatch({ type: 'UPDATE_FREE_DRINK', payload: { freeDrink: value } });
     },
-    [setGourmetForm]
+    [dispatch]
   );
+
   const onChangeFreeFood = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.checked ? parseInt(event.target.value) : 0;
-      setGourmetForm((prevState) => {
-        return { ...prevState, wifi: value };
-      });
+      dispatch({ type: 'UPDATE_FREE_FOOD', payload: { freeFood: value } });
     },
-    [setGourmetForm]
+    [dispatch]
   );
 
   return {

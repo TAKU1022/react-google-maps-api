@@ -1,5 +1,5 @@
 import { useCallback, useContext } from 'react';
-import { MapLoadingContext } from '../contexts/MapLoadingProvider';
+import { MapLoadingContext } from '../contexts/MapLoading/MapLoadingProvider';
 
 export const useMapLoading = () => {
   const context = useContext(MapLoadingContext);
