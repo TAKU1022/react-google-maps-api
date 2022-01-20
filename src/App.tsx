@@ -137,7 +137,8 @@ export const App: VFC = () => {
         onClickMarker={onClickMarker}
         onCloseInfoWindow={onCloseInfoWindow}
       />
-      <div>
+      <div className="mt-6">
+        <p>※検索上限は最大100件です。</p>
         <LocationForm hitCount={hitCount} onSubmitForm={onSubmitForm} />
       </div>
     </div>
