@@ -1,34 +1,27 @@
-import { FormEvent, memo, VFC } from 'react';
+import { memo, VFC } from 'react';
 import largeAreaData from '../data/largeArea.json';
 import middleAreaData from '../data/middleArea.json';
 import genreData from '../data/genre.json';
-import { useGourmetForm } from '../hooks/useGourmetForm';
 import { useMapLoading } from '../hooks/useMapLoading';
+import { UseFormRegister } from 'react-hook-form';
+import { GourmetForm } from '../types/GourmetForm';
 
 type Props = {
+  register: UseFormRegister<GourmetForm>;
+  largeAreaValue: string;
   hitCount?: number;
-  onSubmitForm: (event: FormEvent<HTMLFormElement>) => Promise<void>;
+  onSubmitForm: () => Promise<void>;
 };
 
 export const LocationForm: VFC<Props> = memo((props) => {
-  const { hitCount, onSubmitForm } = props;
-  const {
-    gourmetForm,
-    onChangeLargeArea,
-    onChangeMiddleArea,
-    onChangeGenre,
-    onChangeKeyword,
-    onChangeWifi,
-    onChangeFreeDrink,
-    onChangeFreeFood,
-  } = useGourmetForm();
+  const { register, largeAreaValue, hitCount, onSubmitForm } = props;
   const { isLoading } = useMapLoading();
 
   return (
     <form onSubmit={onSubmitForm}>
       <select
         className="border-2 rounded px-4 py-2 mt-4 mr-4"
-        onChange={onChangeLargeArea}
+        {...register('largeArea')}
       >
         {largeAreaData.results.large_area.map((area) => (
           <option key={area.code} value={area.code}>
@@ -38,12 +31,10 @@ export const LocationForm: VFC<Props> = memo((props) => {
       </select>
       <select
         className="border-2 rounded px-4 py-2 mt-4 mr-4"
-        onChange={onChangeMiddleArea}
+        {...register('middleArea')}
       >
         {middleAreaData.results.middle_area
-          .filter(
-            (areaData) => areaData.large_area.code === gourmetForm.largeArea
-          )
+          .filter((areaData) => areaData.large_area.code === largeAreaValue)
           .map((area) => (
             <option key={area.code} value={area.code}>
               {area.name}
@@ -52,7 +43,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
       </select>
       <select
         className="border-2 rounded px-4 py-2 mt-4 mr-4"
-        onChange={onChangeGenre}
+        {...register('genre')}
       >
         {genreData.results.genre.map((genre) => (
           <option key={genre.code} value={genre.code}>
@@ -64,7 +55,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
         className="border-2 rounded p-2 mt-4 mr-4"
         type="text"
         placeholder="キーワード"
-        onChange={onChangeKeyword}
+        {...register('keyword')}
       />
       <label
         className="inline-flex justify-center cursor-pointer items-center mt-4 mr-6"
@@ -74,8 +65,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           id="wifi"
           className="mr-1"
           type="checkbox"
-          value={1}
-          onChange={onChangeWifi}
+          {...register('wifi')}
         />
         <span>WiFi利用可能</span>
       </label>
@@ -87,8 +77,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           id="free-drink"
           className="mr-1"
           type="checkbox"
-          value={1}
-          onChange={onChangeFreeDrink}
+          {...register('freeDrink')}
         />
         <span>飲み放題</span>
       </label>
@@ -100,8 +89,7 @@ export const LocationForm: VFC<Props> = memo((props) => {
           id="free-food"
           className="mr-1"
           type="checkbox"
-          value={1}
-          onChange={onChangeFreeFood}
+          {...register('freeFood')}
         />
         <span>食べ放題</span>
       </label>

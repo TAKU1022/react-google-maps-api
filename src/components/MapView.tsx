@@ -5,7 +5,7 @@ import {
   LoadScript,
   Marker,
 } from '@react-google-maps/api';
-import { Shop } from '../type/HotPepper';
+import { Shop } from '../types/HotPepper';
 import { useMapLoading } from '../hooks/useMapLoading';
 
 type Props = {
